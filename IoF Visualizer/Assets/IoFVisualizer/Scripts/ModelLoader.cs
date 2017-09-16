@@ -106,6 +106,8 @@ public class ModelLoader : MonoBehaviour {
 
     public int iterations = 1000;
 
+    public GameObject NameplatePrefab;
+
 	// Use this for initialization
 	void Start () {
         graph = new GraphNode("aszecsei");
@@ -186,6 +188,15 @@ public class ModelLoader : MonoBehaviour {
         }
         g.model = n;
         nodes.Add(g.Username, g);
+
+        GameObject nameplate = Instantiate<GameObject>(NameplatePrefab);
+        nameplate.name = g.Username;
+        UnityEngine.UI.Text t = nameplate.GetComponentInChildren<UnityEngine.UI.Text>();
+        t.text = g.Username;
+        nameplate.transform.parent = n.transform;
+        nameplate.transform.localPosition = new Vector3(0, -1 / nodeScale, 0);
+        nameplate.transform.localScale = Vector3.one;
+
         foreach (GraphNode gg in g.Connections)
         {
             if (!nodes.ContainsKey(gg.Username))

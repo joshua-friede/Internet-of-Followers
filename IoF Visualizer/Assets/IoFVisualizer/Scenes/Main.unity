@@ -308,6 +308,8 @@ MonoBehaviour:
   nodeScale: 0.3
   edgeWidth: 0.05
   iterations: 1000
+  NameplatePrefab: {fileID: 1713858329369976, guid: 777443b639aca864e951bce2633cd641,
+    type: 2}
 --- !u!4 &1956408561
 Transform:
   m_ObjectHideFlags: 0
