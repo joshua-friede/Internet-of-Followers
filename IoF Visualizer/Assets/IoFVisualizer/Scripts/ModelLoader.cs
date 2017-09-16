@@ -197,7 +197,7 @@ public class ModelLoader : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // TODO: Calculate the force on each vertex
+        // Calculate the force on each vertex
         float c1 = 2f;
         float c2 = 1f;
         float c3 = 1f;
@@ -225,7 +225,7 @@ public class ModelLoader : MonoBehaviour {
 
             // move the vertex c4 * (force on vertex)
             force *= c4;
-            elem.Value.model.transform.position += force;
+            elem.Value.model.transform.position += Time.deltaTime * 10f * force;
         }
 
         // Fix edges
