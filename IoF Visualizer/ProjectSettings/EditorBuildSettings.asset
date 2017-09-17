@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/IoFVisualizer/Scenes/Main.unity
+    guid: 9bbd38ced5c32a240b1ce55e2c2d870a

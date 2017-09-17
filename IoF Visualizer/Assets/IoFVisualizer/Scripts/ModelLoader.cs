@@ -33,7 +33,7 @@ public class ModelLoader : MonoBehaviour {
             Debug.Log(this.ToString());
         }
 
-        public GraphNode parse()
+        public List<GraphNode> parse()
         {
             Dictionary<string, GraphNode> nodesDict = new Dictionary<string, GraphNode>();
             foreach(string username in nodes)
@@ -47,7 +47,7 @@ public class ModelLoader : MonoBehaviour {
                 nodesDict[edges[i,1]].connect(nodesDict[edges[i,0]]);
             }
 
-            return nodesDict[nodes[0]];
+            return nodesDict.Values.ToList();
         }
 
         public override string ToString()
@@ -143,7 +143,7 @@ public class ModelLoader : MonoBehaviour {
         }
     }
 
-    public GraphNode graph;
+    public List<GraphNode> graphNodes;
     public Dictionary<string, GraphNode> nodes;
     Dictionary<Pair<string, string>, GameObject> connections;
 
@@ -165,16 +165,19 @@ public class ModelLoader : MonoBehaviour {
         // Load graph
         TextAsset jsonObj = Resources.Load("data") as TextAsset;
         Debug.Log(jsonObj.text);
-        graph = new Data(jsonObj.text).parse();
+        graphNodes = new Data(jsonObj.text).parse();
 
-        if(graph == null)
+        if(graphNodes == null)
         {
             Application.Quit();
         }
 
         // Generate the physical representation of the nodes!
         nodes = new Dictionary<string, GraphNode>();
-        GenerateNode(graph);
+        foreach(GraphNode g in graphNodes)
+        {
+            GenerateNode(g);
+        }
 
         connections = new Dictionary<Pair<string, string>, GameObject>();
 
@@ -194,7 +197,10 @@ public class ModelLoader : MonoBehaviour {
                     lr.SetPositions(new Vector3[] { g1.model.transform.position, g2.model.transform.position });
                     lr.startWidth = edgeWidth;
                     lr.endWidth = edgeWidth;
-                    lr.startColor = Color.white;
+                    if (g1.Connections.Contains(g2) && g2.Connections.Contains(g1))
+                        lr.startColor = Color.red;
+                    else
+                        lr.startColor = Color.white;
                     lr.endColor = Color.red;
                     lr.material = new Material(Shader.Find("Particles/Additive"));
                     connections.Add(new Pair<string, string>(g1.Username, g2.Username), conn);
@@ -232,14 +238,6 @@ public class ModelLoader : MonoBehaviour {
         nameplate.transform.SetParent(n.transform, true);
         nameplate.transform.localPosition = new Vector3(0, -1 / nodeScale, 0);
         nameplate.transform.localScale = Vector3.one;
-
-        foreach (GraphNode gg in g.Connections)
-        {
-            if (!nodes.ContainsKey(gg.Username))
-            {
-                GenerateNode(gg);
-            }
-        }
     }
 	
 	// Update is called once per frame

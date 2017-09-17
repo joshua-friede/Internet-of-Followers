@@ -9,35 +9,35 @@ api = connectToTwitter()
 # example: generateFriendsGraph("katyperry")
 
 done = []
+edges = []
+nodes = set()
 
 def generateFriendsGraph(user, d=0):
     global done
+    global edges
+    global nodes
     # Reset done array if necessary
     if(d == 0):
         done = []
 
-    friends = friendsOf(user, api, 10)
+    friends = friendsOf(user, api, 5)
+    nodes.add(user)
 
-    edges = []
     if friends != None:
         for friend in friends:
             edges.append([friend, user])
+            nodes.add(friend)
 
-    print("Friends of " + user + ": " + str(edges))
+    print(json.dumps({"nodes": list(nodes), "edges": edges}))
 
     done.append(user)
-    if d < 4 and friends != None:
+    if d < 5 and friends != None:
         for u in friends:
             if u not in done:
-                edges += generateFriendsGraph(u, d+1)
+                generateFriendsGraph(u, d+1)
                 
     if d == 0:
-        # todo: generate nodes
-        nodes = set()
-        for conn in edges:
-            nodes.add(conn[0])
-            nodes.add(conn[1])
         with open('data1.json', 'w') as fp:
-            json.dump({nodes: nodes, edges: edges}, fp)
+            json.dump({"nodes": list(nodes), "edges": edges}, fp)
     else:
         return edges
