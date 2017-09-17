@@ -13,10 +13,8 @@ def generateFriendsGraph(user, d=0):
     
     if d == 8:
         # write adjacencyList to json file
-        file = open("data1.json", "w")
-        file.write(json.dumps(json.loads(output), indent=4, sort_keys=False))
-        file.close()
-
+        with open('data1.json', 'w') as fp:
+            json.dump(adjacencyList, fp)
         return True
     
     else:
