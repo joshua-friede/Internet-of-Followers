@@ -1,26 +1,7 @@
-import json
-import tweepy
 import time
+from TwitterAuth import connectToTwitter
 
-###################### connect to twitter #########################
-
-### Import Twitter API Credentials
-consumer_key = open('TwitterAuth/consumer_key.txt', 'r').read()
-consumer_secret = open('TwitterAuth/consumer_secret.txt', 'r').read()
-access_token_key = open('TwitterAuth/access_token_key.txt', 'r').read()
-access_token_secret = open('TwitterAuth/access_token_secret.txt', 'r').read()
-
-### Connect to Twitter API
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token_key, access_token_secret)
-
-
-api = tweepy.API(auth)
-
-#####################################################################
-
-
+api = connectToTwitter()
 
 def getFollowerHandleList(handle):
     followerHandles = []
@@ -30,10 +11,11 @@ def getFollowerHandleList(handle):
         followerHandles.append(getHandleFromID(id))
     return followerHandles
 
-
 def getFollowerIDList(handle):
-    return api.followers_ids(screen_name = handle)
+    return api.friends_ids(screen_name = handle)
 
+def getFriendIDList(handle):
+    return api.friends_ids(screen_name = handle)
 
 def getHandleFromID(id):
 
