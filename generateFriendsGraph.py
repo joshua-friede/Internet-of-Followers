@@ -10,7 +10,7 @@ def generateFriendsGraph(user, d=0):
 
     adjacencyList[user] = friendsOf(user)
     
-    if d == 1:
+    if d == 8:
         with open('data.json', 'w') as f:
             json.dumps(adjacencyList, f, sort_keys=False, indent=4, ensure_ascii=False)
         return True
