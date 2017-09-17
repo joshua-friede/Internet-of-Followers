@@ -2,8 +2,59 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class ModelLoader : MonoBehaviour {
+
+    public class Data : System.Object
+    {
+        public string[] nodes;
+        public string[,] edges;
+
+        public Data(string json)
+        {
+            JSONObject obj = new JSONObject(json);
+            JSONObject nodeObj = obj.GetField("nodes");
+            JSONObject edgesObj = obj.GetField("edges");
+            Debug.Log(nodeObj);
+            Debug.Log(edgesObj);
+            nodes = new string[nodeObj.list.Count];
+            for(int i=0; i<nodeObj.list.Count; i++)
+            {
+                nodes[i] = nodeObj.list[i].str;
+            }
+            edges = new string[edgesObj.list.Count, 2];
+            for (int i = 0; i < edgesObj.list.Count; i++)
+            {
+                edges[i, 0] = edgesObj.list[i].list[0].str;
+                edges[i, 1] = edgesObj.list[i].list[1].str;
+            }
+
+            Debug.Log(this.ToString());
+        }
+
+        public GraphNode parse()
+        {
+            Dictionary<string, GraphNode> nodesDict = new Dictionary<string, GraphNode>();
+            foreach(string username in nodes)
+            {
+                nodesDict.Add(username, new GraphNode(username));
+            }
+
+            for(int i=0; i<edges.GetLength(0); i++)
+            {
+                Debug.Log("Connecting " + edges[i, 0] + " and " + edges[i, 1]);
+                nodesDict[edges[i,1]].connect(nodesDict[edges[i,0]]);
+            }
+
+            return nodesDict[nodes[0]];
+        }
+
+        public override string ToString()
+        {
+            return string.Join(",", nodes);
+        }
+    }
 
     [System.Serializable]
     public class GraphNode : System.Object
@@ -21,7 +72,6 @@ public class ModelLoader : MonoBehaviour {
         public void connect(GraphNode other)
         {
             this._connections.Add(other);
-            other._connections.Add(this);
         }
         
         public GraphNode[] Connections
@@ -108,32 +158,18 @@ public class ModelLoader : MonoBehaviour {
 
     public GameObject NameplatePrefab;
 
-	// Use this for initialization
-	void Start () {
-        graph = new GraphNode("aszecsei");
+    private string dataFileName = "data.json";
 
-        GraphNode last = null;
+    // Use this for initialization
+    void Start () {
+        // Load graph
+        TextAsset jsonObj = Resources.Load("data") as TextAsset;
+        Debug.Log(jsonObj.text);
+        graph = new Data(jsonObj.text).parse();
 
-        for(int i=0; i<10; i++)
+        if(graph == null)
         {
-            GraphNode temp = new GraphNode("User " + (i + 1));
-
-            for(int j=0; j<10; j++)
-            {
-                GraphNode temp2 = new GraphNode("User " + (i + 1) + " " + (j + 1));
-                temp.connect(temp2);
-                if(Random.Range(0, 2) > 0)
-                {
-                    temp2.connect(graph);
-                }
-                if(last != null && Random.Range(0, 2) > 0)
-                {
-                    temp2.connect(last);
-                }
-                last = temp2;
-            }
-
-            graph.connect(temp);
+            Application.Quit();
         }
 
         // Generate the physical representation of the nodes!
@@ -174,7 +210,7 @@ public class ModelLoader : MonoBehaviour {
     {
         GameObject n = GameObject.CreatePrimitive(PrimitiveType.Cube);
         n.transform.localScale = new Vector3(nodeScale, nodeScale, nodeScale);
-        n.transform.position = new Vector3(x * 4, y * 4, z * 4);
+        n.transform.position = new Vector3(x * 4, y * 4, z * 4 + 10);
         z++;
         if (z > y + 1)
         {

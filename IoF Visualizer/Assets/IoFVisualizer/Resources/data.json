@@ -2,7 +2,7 @@
   "nodes": ["aszecsei", "hekemp", "POTUS", "katyperry"],
   "edges": [["hekemp", "aszecsei"],
             ["katyperry", "aszecsei"],
-            ["katyperry", "POTUS"],
+            ["POTUS", "katyperry"],
             ["aszecsei", "hekemp"],
             ["katyperry", "hekemp"]]
 }

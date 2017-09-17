@@ -36,5 +36,10 @@ public class CameraController : MonoBehaviour {
             UnityEngine.VR.VRSettings.enabled = !UnityEngine.VR.VRSettings.enabled;
             Debug.Log("Changed VRSettings.enabled to: " + UnityEngine.VR.VRSettings.enabled);
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }
