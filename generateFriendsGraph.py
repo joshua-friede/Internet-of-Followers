@@ -2,17 +2,21 @@ from TwitterAuth import connectToTwitter
 from friendsOf import friendsOf
 import json
 
-
-
 adjacencyList = {}
+
+# example: generateFriendsGraph("katyperry")
+
 def generateFriendsGraph(user, d=0):
     global adjacencyList
 
     adjacencyList[user] = friendsOf(user)
     
     if d == 8:
-        with open('data.json', 'w') as outfile:  
-            json.dump(adjacencyList, outfile)
+        # write adjacencyList to json file
+        file = open("data1.json", "w")
+        file.write(simplejson.dumps(simplejson.loads(output), indent=4, sort_keys=False))
+        file.close()
+
         return True
     
     else:
