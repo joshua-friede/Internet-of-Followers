@@ -16,7 +16,7 @@ def generateFriendsGraph(user, d=0):
     if(d == 0):
         done = []
 
-    friends = friendsOf(user, api)
+    friends = friendsOf(user, api, 10)
 
     edges = []
     if friends != None:
@@ -26,7 +26,7 @@ def generateFriendsGraph(user, d=0):
     print("Friends of " + user + ": " + str(edges))
 
     done.append(user)
-    if d < 8 and friends != None:
+    if d < 4 and friends != None:
         for u in friends:
             if u not in done:
                 edges += generateFriendsGraph(u, d+1)

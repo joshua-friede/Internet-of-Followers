@@ -30,5 +30,11 @@ public class CameraController : MonoBehaviour {
         rot.x -= this.turnSpeed * turnVertical * Time.deltaTime;
 
         this.transform.rotation = Quaternion.Euler(rot);
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            UnityEngine.VR.VRSettings.enabled = !UnityEngine.VR.VRSettings.enabled;
+            Debug.Log("Changed VRSettings.enabled to: " + UnityEngine.VR.VRSettings.enabled);
+        }
     }
 }

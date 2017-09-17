@@ -193,7 +193,7 @@ public class ModelLoader : MonoBehaviour {
         nameplate.name = g.Username;
         UnityEngine.UI.Text t = nameplate.GetComponentInChildren<UnityEngine.UI.Text>();
         t.text = g.Username;
-        nameplate.transform.parent = n.transform;
+        nameplate.transform.SetParent(n.transform, true);
         nameplate.transform.localPosition = new Vector3(0, -1 / nodeScale, 0);
         nameplate.transform.localScale = Vector3.one;
 
